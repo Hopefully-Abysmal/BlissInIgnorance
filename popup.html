@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bliss Settings</title>
+  <style>
+    body { font-family: sans-serif; width: 300px; padding: 10px; }
+    input, button { margin: 5px 0; width: 100%; }
+  </style>
+</head>
+<body>
+  <h3>Blocked Words</h3>
+  <input type="text" id="wordInput" placeholder="Add word to block" />
+  <button id="addWord">Add</button>
+  <ul id="wordList"></ul>
+
+  <script>
+    const input = document.getElementById("wordInput");
+    const addBtn = document.getElementById("addWord");
+    const list = document.getElementById("wordList");
+
+    async function loadWords() {
+      const { blockedWords = [] } = await chrome.storage.local.get("blockedWords");
+      list.innerHTML = '';
+      blockedWords.forEach(word => {
+        const li = document.createElement("li");
+        li.textContent = word;
+        list.appendChild(li);
+      });
+    }
+
+    addBtn.onclick = async () => {
+      const newWord = input.value.trim();
+      if (newWord) {
+        const { blockedWords = [] } = await chrome.storage.local.get("blockedWords");
+        blockedWords.push(newWord);
+        await chrome.storage.local.set({ blockedWords });
+        input.value = '';
+        loadWords();
+      }
+    };
+
+    loadWords();
+  </script>
+</body>
+</html>
