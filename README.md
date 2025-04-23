@@ -1,5 +1,3 @@
----
-
 # README.md
 
 ## Bliss in Ignorance — Firefox Extension
